@@ -5,7 +5,6 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Alejandro Duarte
@@ -15,7 +14,6 @@ public class VaadinUI extends UI {
 
     private final PersonService service;
 
-    @Autowired
     public VaadinUI(PersonService service) {
         this.service = service;
     }

@@ -1,6 +1,5 @@
 package com.example;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,6 @@ public class PersonService {
 
     private final PersonRepository repository;
 
-    @Autowired
     public PersonService(PersonRepository repository) {
         this.repository = repository;
     }
