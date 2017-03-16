@@ -4,6 +4,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
 @SpringUI
 public class VaadinUI extends UI {
 
+    private Grid<Person> grid = new Grid<>(Person.class);
+    private TextField textField = new TextField(event -> updateGrid());
+
     private final PersonService service;
 
     public VaadinUI(PersonService service) {
@@ -24,9 +28,16 @@ public class VaadinUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        Grid<Person> grid = new Grid<>(Person.class);
-        grid.setSizeFull();
+        textField.setPlaceholder("Search");
 
+        VerticalLayout layout = new VerticalLayout(textField);
+        layout.addComponentsAndExpand(grid);
+        setContent(layout);
+
+        updateGrid();
+    }
+
+    private void updateGrid() {
         grid.setDataProvider(
                 (sortOrders, offset, limit) -> {
                     Map<String, Boolean> sortOrder = sortOrders.stream()
@@ -34,14 +45,10 @@ public class VaadinUI extends UI {
                                     sort -> sort.getSorted(),
                                     sort -> sort.getDirection() == SortDirection.ASCENDING));
 
-                    return service.findAll(offset, limit, sortOrder).stream();
+                    return service.searchByFirstNameOrLastName(textField.getValue(), textField.getValue(), offset, limit, sortOrder).stream();
                 },
-                () -> service.count()
+                () -> service.searchByFirstNameOrLastName(textField.getValue(), textField.getValue())
         );
-
-        VerticalLayout layout = new VerticalLayout(grid);
-        layout.setSizeFull();
-        setContent(layout);
     }
 
 }
