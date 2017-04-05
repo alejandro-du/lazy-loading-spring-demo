@@ -27,7 +27,8 @@ public class PersonService {
                 .collect(Collectors.toList());
 
         PageRequest pageRequest = new PageRequest(page, limit, orders.isEmpty() ? null : new Sort(orders));
-        return repository.findAll(pageRequest).getContent();
+        List<Person> items = repository.findAll(pageRequest).getContent();
+        return items.subList(offset%limit, items.size());
     }
 
     public Integer count() {
